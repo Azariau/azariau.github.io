@@ -1,7 +1,7 @@
 const mediaContent = {
     1: {
         medias: [
-            { type: 'image', src: 'images/1.png', description: 'Premier approche' },
+            { type: 'image', src: 'images/1.png', description: 'Première approche' },
         ]
     },
     2: {
