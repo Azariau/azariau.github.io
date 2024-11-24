@@ -101,6 +101,19 @@ const mediaContent = {
     }
 };
 
+const unwrapSound = document.getElementById('unwrapSound');
+
+function playUnwrapSound() {
+    unwrapSound.currentTime = 0;
+    unwrapSound.volume = 0.5;
+    try {
+        unwrapSound.play().catch(function(error) {
+            console.log("Lecture du son impossible : ", error);
+        });
+    } catch (e) {
+        console.log("Erreur de lecture du son : ", e);
+    }
+}
 
 function createCalendar() {
     const calendar = document.querySelector('.calendar');
@@ -147,6 +160,8 @@ function handleCaseClick(caseElement, dayNumber) {
         }
         return;
     }
+
+    playUnwrapSound();
 
     caseElement.classList.add('opened');
 
