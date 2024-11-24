@@ -1,8 +1,27 @@
 const mediaContent = {
-    1: { type: 'image', src: 'images/1.png' },
-    2: { type: 'video', src: 'videos/jour2.mp4' },
-    3: { type: 'image', src: '/api/placeholder/800/600' },
+    2: {
+        medias: [
+            { type: 'image', src: 'images/1.png', description: 'Premier approche' },
+        ]
+    },
+    1: {
+        medias: [
+            { type: 'image', src: 'images/2.jpg', description: 'Première relance' },
+            { type: 'image', src: 'images/2-A.jpg', description: 'Premier "Bonne Nuit"' }
+        ]
+    },
+    3: {
+        medias: [
+            { type: 'image', src: '/api/placeholder/800/600', description: 'Un moment magique' }
+        ]
+    },
+    4: {
+        medias: [
+            { type: 'video', src: 'videos/4.mp4', description: 'Premier Date' }
+        ]
+    },
 };
+
 
 function createCalendar() {
     const calendar = document.querySelector('.calendar');
@@ -65,32 +84,75 @@ function showMedia(dayNumber) {
 
     modal.style.display = 'flex';
 
-    setTimeout(() => {
-        if (content.type === 'image') {
-            const img = document.createElement('img');
-            img.src = content.src;
-            img.alt = `Jour ${dayNumber}`;
-            img.className = 'modal-image';
+    const swiperContainer = document.createElement('div');
+    swiperContainer.className = 'swiper';
 
-            img.onload = () => {
-                mediaContainer.appendChild(img);
-                requestAnimationFrame(() => {
-                    modal.classList.add('active');
-                });
-            };
-        } else if (content.type === 'video') {
+    const swiperWrapper = document.createElement('div');
+    swiperWrapper.className = 'swiper-wrapper';
+
+    const prevButton = document.createElement('div');
+    prevButton.className = 'swiper-button-prev';
+
+    const nextButton = document.createElement('div');
+    nextButton.className = 'swiper-button-next';
+
+    const pagination = document.createElement('div');
+    pagination.className = 'swiper-pagination';
+
+    content.medias.forEach(media => {
+        const slide = document.createElement('div');
+        slide.className = 'swiper-slide';
+
+        if (media.type === 'image') {
+            const img = document.createElement('img');
+            img.src = media.src;
+            img.className = 'modal-image';
+            img.alt = media.description || '';
+            slide.appendChild(img);
+        } else if (media.type === 'video') {
             const video = document.createElement('video');
-            video.src = content.src;
+            video.src = media.src;
             video.className = 'modal-video';
             video.controls = true;
             video.autoplay = true;
-
-            mediaContainer.appendChild(video);
-            requestAnimationFrame(() => {
-                modal.classList.add('active');
-            });
+            slide.appendChild(video);
         }
-    }, 50);
+
+        if (media.description) {
+            const desc = document.createElement('div');
+            desc.className = 'media-description';
+            desc.innerHTML = media.description;
+            setTimeout(() => desc.style.opacity = '1', 100);
+            slide.appendChild(desc);
+        }
+
+        swiperWrapper.appendChild(slide);
+    });
+
+    swiperContainer.appendChild(swiperWrapper);
+    swiperContainer.appendChild(prevButton);
+    swiperContainer.appendChild(nextButton);
+    swiperContainer.appendChild(pagination);
+    mediaContainer.appendChild(swiperContainer);
+
+    const swiper = new Swiper('.swiper', {
+        navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+        },
+        pagination: {
+            el: '.swiper-pagination',
+            clickable: true
+        },
+        effect: 'fade',
+        fadeEffect: {
+            crossFade: true
+        }
+    });
+
+    requestAnimationFrame(() => {
+        modal.classList.add('active');
+    });
 }
 
 function showError(element, message) {
