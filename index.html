@@ -9,11 +9,10 @@
             margin: 0;
             min-height: 100vh;
             font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #1a365d 0%, #2d3748 100%);
+            background: url("images/noel.jpg") no-repeat center center / cover;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 20px;
         }
 
         .calendar {
@@ -22,9 +21,8 @@
             gap: 15px;
             max-width: 800px;
             padding: 20px;
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, .5);
             border-radius: 20px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
         }
 
         .case {
@@ -40,6 +38,7 @@
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
+            padding: 4px;
         }
 
         .case::before {
@@ -49,7 +48,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(45deg, rgba(255,255,255,0.1), rgba(255,255,255,0.2));
+            background: linear-gradient(45deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.2));
             z-index: 1;
         }
 
@@ -58,13 +57,36 @@
             z-index: 2;
         }
 
-        /* Palette de couleurs festives */
-        .case:nth-child(6n+1) { background: #e53e3e; }  /* Rouge */
-        .case:nth-child(6n+2) { background: #38a169; }  /* Vert */
-        .case:nth-child(6n+3) { background: #805ad5; }  /* Violet */
-        .case:nth-child(6n+4) { background: #3182ce; }  /* Bleu */
-        .case:nth-child(6n+5) { background: #d69e2e; }  /* Or */
-        .case:nth-child(6n) { background: #e53e3e; }    /* Rouge */
+        .case:nth-child(6n+1) {
+            background: #e53e3e;
+        }
+
+        /* Rouge */
+        .case:nth-child(6n+2) {
+            background: #38a169;
+        }
+
+        /* Vert */
+        .case:nth-child(6n+3) {
+            background: #805ad5;
+        }
+
+        /* Violet */
+        .case:nth-child(6n+4) {
+            background: #3182ce;
+        }
+
+        /* Bleu */
+        .case:nth-child(6n+5) {
+            background: #d69e2e;
+        }
+
+        /* Or */
+        .case:nth-child(6n) {
+            background: #e53e3e;
+        }
+
+        /* Rouge */
 
         .case:hover {
             transform: scale(1.05);
@@ -87,9 +109,15 @@
         }
 
         @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
-            75% { transform: translateX(5px); }
+            0%, 100% {
+                transform: translateX(0);
+            }
+            25% {
+                transform: translateX(-5px);
+            }
+            75% {
+                transform: translateX(5px);
+            }
         }
 
         .error-message {
@@ -123,67 +151,86 @@
     </style>
 </head>
 <body>
-    <div class="calendar">
-        <!-- Les cases seront générées par JavaScript -->
-    </div>
 
-    <script>
-        function createCalendar() {
-            const calendar = document.querySelector('.calendar');
-            const currentDate = new Date();
-            const currentMonth = currentDate.getMonth();
-            const currentDay = currentDate.getDate();
-            const isDecember = currentMonth === 11;
-            
-            for (let i = 1; i <= 24; i++) {
-                const caseElement = document.createElement('div');
-                caseElement.className = 'case';
-                
-                const span = document.createElement('span');
-                span.textContent = i;
-                caseElement.appendChild(span);
-                
-                if (isDecember ? i > currentDay : true) {
-                    caseElement.classList.add('locked');
-                }
-                
-                caseElement.addEventListener('click', handleCaseClick);
-                calendar.appendChild(caseElement);
+<div class="calendar">
+    <!-- Les cases seront générées par JavaScript -->
+</div>
+
+<script>
+    function createCalendar() {
+        const calendar = document.querySelector('.calendar');
+        const currentDate = new Date();
+        const currentMonth = currentDate.getMonth();
+        const currentDay = currentDate.getDate();
+
+        const startDate = new Date(2024, 10, 24);
+        const endDate = new Date(2024, 11, 18);
+
+        for (let i = 1; i <= 24; i++) {
+            const caseElement = document.createElement('div');
+            caseElement.className = 'case';
+
+            const span = document.createElement('span');
+            span.textContent = i;
+            caseElement.appendChild(span);
+
+            const caseDate = new Date(2024, 10, 23 + i); // 24 novembre + index
+
+            if (currentDate < startDate || currentDate > endDate || currentDate < caseDate) {
+                caseElement.classList.add('locked');
             }
+
+            caseElement.addEventListener('click', handleCaseClick);
+            calendar.appendChild(caseElement);
+        }
+    }
+
+    function handleCaseClick(event) {
+        const caseElement = event.currentTarget;
+        const currentDate = new Date();
+        const startDate = new Date(2024, 10, 24);
+        const endDate = new Date(2024, 11, 18);
+
+        if (caseElement.classList.contains('locked')) {
+            const dayNumber = parseInt(caseElement.textContent);
+            const caseDate = new Date(2024, 10, 23 + dayNumber);
+
+            if (currentDate < startDate) {
+                showError(caseElement, "Disponible à partir du 24 novembre !");
+            } else if (currentDate > endDate) {
+                showError(caseElement, "Le calendrier est terminé !");
+            } else {
+                const month = caseDate.getMonth() === 10 ? "novembre" : "décembre";
+                const day = caseDate.getDate();
+                showError(caseElement, `Disponible le ${day} ${month} !`);
+            }
+            return;
         }
 
-        function handleCaseClick(event) {
-            const caseElement = event.currentTarget;
-            
-            if (caseElement.classList.contains('locked')) {
-                showError(caseElement, "Pas encore disponible !");
-                return;
-            }
-            
-            if (!caseElement.classList.contains('opened')) {
-                caseElement.classList.add('opened');
-                // Ici vous pourrez ajouter le contenu de la case plus tard
-            }
+        if (!caseElement.classList.contains('opened')) {
+            caseElement.classList.add('opened');
+            // Ici vous pourrez ajouter le contenu de la case plus tard
+        }
+    }
+
+    function showError(element, message) {
+        const existingError = element.querySelector('.error-message');
+        if (existingError) {
+            existingError.remove();
         }
 
-        function showError(element, message) {
-            const existingError = element.querySelector('.error-message');
-            if (existingError) {
-                existingError.remove();
-            }
-            
-            const errorDiv = document.createElement('div');
-            errorDiv.className = 'error-message';
-            errorDiv.textContent = message;
-            element.appendChild(errorDiv);
-            
-            setTimeout(() => {
-                errorDiv.remove();
-            }, 2000);
-        }
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'error-message';
+        errorDiv.textContent = message;
+        element.appendChild(errorDiv);
 
-        // Créer le calendrier au chargement de la page
-        createCalendar();
-    </script>
+        setTimeout(() => {
+            errorDiv.remove();
+        }, 2000);
+    }
+
+    // Créer le calendrier au chargement de la page
+    createCalendar();
+</script>
 </body>
 </html>
