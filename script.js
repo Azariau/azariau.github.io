@@ -1,10 +1,10 @@
 const mediaContent = {
-    2: {
+    1: {
         medias: [
             { type: 'image', src: 'images/1.png', description: 'Premier approche' },
         ]
     },
-    1: {
+    2: {
         medias: [
             { type: 'image', src: 'images/2.jpg', description: 'Première relance' },
             { type: 'image', src: 'images/2-A.jpg', description: 'Premier "Bonne Nuit"' }
