@@ -1,25 +1,104 @@
 const mediaContent = {
     1: {
         medias: [
-            { type: 'image', src: 'images/1.png', description: 'Première approche' },
+            {type: 'image', src: 'images/1.png', description: 'première approche'}
         ]
     },
     2: {
         medias: [
-            { type: 'image', src: 'images/2.jpg', description: 'Première relance' },
-            { type: 'image', src: 'images/2-A.jpg', description: 'Premier "Bonne Nuit"' }
+            {type: 'image', src: 'images/2.jpg', description: 'Première Relance'},
+            {type: 'image', src: 'images/2-A.jpg', description: 'Premier Bonne Nuit'}
         ]
     },
     3: {
         medias: [
-            { type: 'image', src: '/api/placeholder/800/600', description: 'Un moment magique' }
+            {type: 'image', src: 'images/3.jpg', description: 'Premier Délire'}
         ]
     },
     4: {
         medias: [
-            { type: 'video', src: 'videos/4.mp4', description: 'Premier Date' }
+            {type: 'video', src: 'videos/4.mp4', description: 'Premier Date'},
+            {type: 'image', src: 'images/4A.jpg'},
+            {type: 'video', src: 'videos/4B.mp4', description: 'MIAM'},
+            {type: 'image', src: 'images/4C.jpg'}
         ]
     },
+    5: {
+        medias: [
+            {type: 'image', src: 'images/5.jpg', description: 'Deuxième Date'},
+            {type: 'video', src: 'videos/5A.mp4'},
+            {type: 'image', src: 'images/5B.jpg'},
+        ]
+    },
+    6: {
+        medias: [
+            {type: 'video', src: 'videos/6A.mp4', description: 'Troisième Date'},
+            {type: 'image', src: 'images/6B.jpg'},
+            {type: 'image', src: 'images/6C.jpg', description: 'Cinéma'},
+        ]
+    },
+    7: {
+        medias: [
+            {type: 'image', src: 'images/7.jpg', description: 'Direction Chez Lili'},
+            {type: 'image', src: 'images/7B.jpg', description: 'Toi Même Tu Sais'}
+        ]
+    },
+    8: {
+        medias: [
+            {type: 'image', src: 'images/8.jpg', description: 'Quatrième Date'},
+            {type: 'image', src: 'images/8A.jpg', description: 'Big O\'Tacos : Round 1'},
+            {type: 'image', src: 'images/8B.jpg', description: 'Première Photo Ensemble'},
+            {type: 'image', src: 'images/8C.jpg', description: 'Big O\'Tacos : Round 2'}
+        ]
+    },
+    9: {
+        medias: [
+            {type: 'image', src: 'images/9.jpg', description: 'Premier FaceTime'}
+        ]
+    },
+    10: {
+        medias: [
+            {type: 'image', src: 'images/10.jpg', description: 'Easy Win'},
+            {type: 'image', src: 'images/10A.jpg', description: 'No One Can Beat Me'},
+            {type: 'image', src: 'images/10B.jpg', description: 'Soit T\'es Bon Soit T\'es Pas Bon'}
+        ]
+    },
+    11: {
+        medias: [
+            {type: 'image', src: 'images/11.jpg', description: 'La meilleure décision'}
+        ]
+    },
+    12: {
+        medias: [
+            {type: 'image', src: 'images/12.jpg', description: 'Drôle de proposition'}
+        ]
+    },
+    13: {
+        medias: [
+            {type: 'image', src: 'images/13.jpg', description: 'Harcèlement appréciable'}
+        ]
+    },
+    14: {
+        medias: [
+            {type: 'image', src: 'images/14.jpg', description: 'Première Communication'}
+        ]
+    },
+    15: {
+        medias: [
+            {type: 'image', src: 'images/15.jpg', description: 'Ton Cœur de Pierre'}
+        ]
+    },
+    16: {
+        medias: [
+            {type: 'image', src: 'images/16.jpg', description: 'Premiers widgets'}
+        ]
+    },
+    17: {
+        medias: [
+            {type: 'video', src: 'videos/17.mp4', description: 'Point faible : trop fort'},
+            {type: 'image', src: 'images/17B.jpg', description: 'Matching'},
+        ]
+    }
 };
 
 
@@ -195,4 +274,49 @@ document.getElementById('errorModal').addEventListener('click', (e) => {
     }
 });
 
+
+function createSnowfall() {
+    const snowflakes = ['❅', '❆', '❄'];
+    const maxSnowflakes = 50;
+    const container = document.body;
+
+    function createSnowflake() {
+        if (document.querySelectorAll('.snowflake').length > maxSnowflakes) return;
+
+        const snowflake = document.createElement('div');
+        snowflake.className = 'snowflake';
+        snowflake.textContent = snowflakes[Math.floor(Math.random() * snowflakes.length)];
+
+        // Position initiale aléatoire
+        const startPosition = Math.random() * window.innerWidth;
+        snowflake.style.left = `${startPosition}px`;
+
+        container.appendChild(snowflake);
+
+        // Animation
+        requestAnimationFrame(() => {
+            snowflake.classList.add('active');
+
+            const duration = 5000 + Math.random() * 5000;
+            const rotation = -30 + Math.random() * 60;
+            const horizontalMove = -50 + Math.random() * 100;
+
+            snowflake.style.transition = `all ${duration}ms linear`;
+            snowflake.style.transform = `translateY(${window.innerHeight + 20}px) translateX(${horizontalMove}px) rotate(${rotation}deg)`;
+
+            // Supprimer le flocon après l'animation
+            setTimeout(() => {
+                snowflake.remove();
+            }, duration);
+        });
+    }
+
+    setInterval(() => {
+        if (Math.random() < 0.4) {
+            createSnowflake();
+        }
+    }, 200);
+}
+
 document.addEventListener('DOMContentLoaded', createCalendar);
+document.addEventListener('DOMContentLoaded', createSnowfall);
